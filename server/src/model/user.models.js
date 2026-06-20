@@ -1,7 +1,11 @@
-import express from "express";
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
+    clerkId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     email: {
         type: String,
         required: true,
@@ -12,7 +16,8 @@ const userSchema = new mongoose.Schema({
         required: true,
     },
     profilePic: {
-        default: false,
+        type: String,
+        default: "",
     }
 }, {timestamps: true});
 
