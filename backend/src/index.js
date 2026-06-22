@@ -7,6 +7,7 @@ import path from "path";
 import {clerkMiddleware} from "@clerk/express";
 
 import { connectDb } from "./config/connectdb.js";
+import job from "./lib/corn.js";
 
 dotenv.config();
 
@@ -42,4 +43,8 @@ if (fs.existsSync(publicDir)) { //Check if the public folder exist
 app.listen(port, () => {
     connectDb();
     console.log(`listing in port ${port}`);
+    
+    if(process.env.NODE_ENV === "production") {
+        job.start();
+    }
 })
