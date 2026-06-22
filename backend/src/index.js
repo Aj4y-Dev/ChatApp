@@ -8,6 +8,7 @@ import {clerkMiddleware} from "@clerk/express";
 
 import { connectDb } from "./config/connectdb.js";
 import job from "./lib/corn.js";
+import clerkWebhook from "./webhooks/clerk.webhook.js"
 
 dotenv.config();
 
@@ -15,6 +16,8 @@ const app = express();
 const port = process.env.PORT;
 
 const publicDir = path.join(process.cwd(), "public"); //Gets the full path of the public folder. like C:\project\public
+
+app.use("/api/webhooks/clerk", express.raw({type: "application/json"}), clerkWebhook);
 
 app.use(express.json());
 app.use(cors({
