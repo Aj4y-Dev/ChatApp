@@ -10,6 +10,7 @@ import { connectDb } from "./config/connectdb.js";
 import job from "./lib/corn.js";
 import clerkWebhook from "./webhooks/clerk.webhook.js";
 import authRouter from "./routes/auth.route.js";
+import messageRouter from "./routes/message.route.js"
 
 dotenv.config();
 
@@ -35,6 +36,7 @@ app.get("/health", (req, res) => {
 });
 
 app.use("/api/auth",authRouter );
+app.use("/api/messages", messageRouter);
 
 // if the public directory exists, serve the static files
 // this is for the production build
