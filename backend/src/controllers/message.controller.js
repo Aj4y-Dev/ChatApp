@@ -122,3 +122,60 @@ export const sendMessage = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const getmessages = async (req, res) => {
+  try {
+    const { id: userToChatId } = req.params;
+    const myId = req.user._id;
+
+    const messages = await Message.find({
+      $or: [
+        { senderId: myId, receiverId: userToChatId },
+        { senderId: userToChatId, receiverId: myId },
+      ],
+    }).sort({ createdAt: 1 });
+
+    res.status(200).json(messages);
+  } catch (err) {
+    console.error("Error in getMessages:", err.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const sendMessage = async (req, res) => {
+  try {
+    const { text } = req.body;
+    const { id: receiverId } = req.params;
+    const senderId = req.user._id;
+
+    let imageUrl;
+    let videoUrl;
+
+    if (req.file) {
+      if (!hasImageKitConfig()) {
+        return res
+          .status(500)
+          .json({ message: "Media upload is not configured" });
+      }
+
+      const url = await uploadChatMedia(req.file);
+      if (req.file.mimetype.startsWith("video/")) videoUrl = url;
+      else imageUrl = url;
+    }
+
+    const newMessage = new Message({
+      senderId,
+      receiverId,
+      text,
+      image: imageUrl,
+      video: videoUrl,
+    });
+
+    await newMessage.save(); //todo: realtime with socketio
+
+    res.status(201).json(newMessage);
+  } catch (err) {
+    console.error("Error in sendMessage:", err.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
