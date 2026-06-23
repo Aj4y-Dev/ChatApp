@@ -1,6 +1,6 @@
 import User from "../model/user.model.js";
 import Message from "../model/message.model.js";
-import { getReciverSocketId } from "../lib/socket.js";
+import { getReceiverSocketId } from "../lib/socket.js";
 
 export const getUsersForSidebar = async (req, res) => {
   try {
@@ -116,7 +116,7 @@ export const sendMessage = async (req, res) => {
 
     await newMessage.save();
 
-    const receiverSocketId = getReciverSocketId(receiverId);
+    const receiverSocketId = getReceiverSocketId(receiverId);
     // only send the message in realtime if user is online
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("newMessage", newMessage);
