@@ -1,0 +1,7 @@
+export const checkAuth = async (req, res) => {
+    if(!req.user) {
+        return res.status(401).json({message: "unauthorized"});
+    }
+
+    res.status(200).json(req.user);
+}
