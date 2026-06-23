@@ -9,17 +9,17 @@ const allowedOrigin = process.env.FRONTEND_URL || "http://localhost:5173";
 
 const io = new Server(server, { cors: { origin: [allowedOrigin] } });
 
-function getReciverSocketId(userId) {
-  return usserSocketMap[userId];
+function getReceiverSocketId(userId) {
+  return userSocketMap[userId];
 }
 
 // online users map = { userId: socketId }
 const userSocketMap = {};
 
-io.on("connection", (socker) => {
-  const userId = Socket.handshake.query.userId;
+io.on("connection", (socket) => {
+  const userId = socket.handshake.query.userId;
 
-  if (userId) userSocketMap[userId] = socker.id;
+  if (userId) userSocketMap[userId] = socket.id;
 
   // io.emit() sends event to everyone - broadcast
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
@@ -31,4 +31,4 @@ io.on("connection", (socker) => {
   });
 });
 
-export { app, server, io, getReciverSocketId };
+export { app, server, io, getReceiverSocketId };
