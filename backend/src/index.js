@@ -11,10 +11,10 @@ import job from "./lib/corn.js";
 import clerkWebhook from "./webhooks/clerk.webhook.js";
 import authRouter from "./routes/auth.route.js";
 import messageRouter from "./routes/message.route.js";
+import { app, server } from "./lib/socket.js";
 
 dotenv.config();
 
-const app = express();
 const port = process.env.PORT;
 
 const publicDir = path.join(process.cwd(), "public"); //Gets the full path of the public folder. like C:\project\public
@@ -56,7 +56,7 @@ if (fs.existsSync(publicDir)) {
   });
 }
 
-app.listen(port, () => {
+server.listen(port, () => {
   connectDb();
   console.log(`listing in port ${port}`);
 
