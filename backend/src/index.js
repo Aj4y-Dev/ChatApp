@@ -5,7 +5,6 @@ import fs from "fs";
 import path from "path";
 
 import { clerkMiddleware } from "@clerk/express";
-
 import { connectDb } from "./config/connectdb.js";
 import job from "./lib/corn.js";
 import clerkWebhook from "./webhooks/clerk.webhook.js";
