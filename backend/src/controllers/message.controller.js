@@ -1,5 +1,6 @@
 import User from "../model/user.model.js";
 import Message from "../model/message.model.js";
+import { getReciverSocketId } from "../lib/socket.js";
 
 export const getUsersForSidebar = async (req, res) => {
   try {
@@ -59,8 +60,8 @@ export const getConversationForSidebar = async (req, res) => {
     ]);
 
     res.status(200).json(conversations);
-  } catch (error) {
-    console.error("Error in getConversationsForSidebar:", error.message);
+  } catch (err) {
+    console.error("Error in getConversationsForSidebar:", err.message);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -113,7 +114,13 @@ export const sendMessage = async (req, res) => {
       video: videoUrl,
     });
 
-    await newMessage.save(); //todo: realtime with socketio
+    await newMessage.save();
+
+    const receiverSocketId = getReciverSocketId(receiverId);
+    // only send the message in realtime if user is online
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMessage", newMessage);
+    }
 
     res.status(201).json(newMessage);
   } catch (err) {
