@@ -13,6 +13,6 @@ const router = express.Router();
 router.get("/users", protectRoute, getUsersForSidebar);
 router.get("/conversations", protectRoute, getConversationForSidebar);
 router.get("/:id", protectRoute, getmessages);
-router.post("/send:id", protectRoute, upload.single("media"), sendMessage); //todo: show this in frontend
+router.post("/send/:id", protectRoute, upload.single("media"), sendMessage); //todo: show this in frontend
 
 export default router;
